@@ -28,7 +28,7 @@ img.onload=function() {
 	socket.onmessage=function(event) {
 		JSON.parse(event.data).forEach(function(item) {
 			$('#'+item.id).css({'left':item.left, 'top':item.top});
-			$('#'+item.id).mouseup();
+			//$('#'+item.id).mouseup();
 		});
 	}
     $('.piece').draggable({drag: function() {
