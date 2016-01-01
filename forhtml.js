@@ -48,5 +48,5 @@ img.onload=function() {
 		$(this).css('z-index',zIndex); 
         zIndex++;
     });
-    $('.piece').mouseup(checkPiece(this).id));
+    $('.piece').mouseup(checkPiece(this.id));
 }
