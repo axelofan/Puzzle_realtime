@@ -1,11 +1,12 @@
 var app=require('express')();
+app.set('port', (process.env.PORT || 5000));
 app.get('/', function(req,res){
 	res.sendfile('index.html');
 });
 app.get(/^(.+)$/, function(req, res){ 
     res.sendfile( __dirname + req.params[0]); 
  });
-app.listen(80);
+app.listen(app.get('port'));
 
 var piece=[];
 for (i=1;i<=8;i++){
