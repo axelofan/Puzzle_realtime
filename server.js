@@ -27,7 +27,6 @@ wss.on('connection',function(ws) {
 				piece[i].left=a.left;
 			}
 		}
-		data='['+data+']';
-		wss.clients.forEach(function(item) {if (item!=ws) item.send(data);});
+		wss.clients.forEach(function(item) {if (item!=ws) item.send('['+data+']');});
 	});
 });
