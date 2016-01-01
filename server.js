@@ -1,11 +1,8 @@
-require('fs').readFile('./index.html',function(err,data){
-	console.log(data);
-	require('http').createServer(function(req,res){
-		res.writeHead(200,{'Content-Type':'text/html'});
-		res.write(data);
-		res.end();
-	}).listen(80);
+var app=require('express')();
+app.get('/', function(req,res){
+	res.sendfile('index.html');
 });
+app.listen(8000);
 
 var piece=[];
 for (i=1;i<=8;i++){
