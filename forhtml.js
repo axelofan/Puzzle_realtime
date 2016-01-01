@@ -1,4 +1,4 @@
-﻿var throttleTime=30, currentTime=Date.now();
+﻿var throttleTime=20, currentTime=Date.now();
 img = document.getElementById('img');
 function checkPiece(id){
 	if (!$('#'+id).hasClass('piece')) return;
@@ -29,7 +29,8 @@ img.onload=function() {
     rowsHeight = Math.round(img.height/rows);
     colsWidth = Math.round(img.width/cols);
     $('.piece').css('width',colsWidth);
-	var host = location.origin.replace(/^http/, 'ws')
+	var host = location.origin.replace(/^http/, 'ws');
+	//var host='ws://localhost:5000';
     var socket = new WebSocket(host);
 	socket.onmessage=function(event) {
 		JSON.parse(event.data).forEach(function(item) {
@@ -48,5 +49,5 @@ img.onload=function() {
 		$(this).css('z-index',zIndex); 
         zIndex++;
     });
-    $('.piece').mouseup(checkPiece(this.id));
+    $('.piece').mouseup(function(){checkPiece(this.id)});
 }
