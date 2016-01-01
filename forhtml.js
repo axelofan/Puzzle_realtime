@@ -39,7 +39,6 @@ img.onload=function() {
 	}
     $('.piece').draggable({drag: function() {
 		socket.send(JSON.stringify({'id':this.id,'left':$(this).css('left'),'top':$(this).css('top')}));
-		}
 	}});
     $('.piece').mousedown(function(){
         if (!$(this).hasClass('piece')) return;
