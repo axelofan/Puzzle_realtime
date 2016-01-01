@@ -32,7 +32,7 @@ img.onload=function() {
 		});
 	}
     $('.piece').draggable({drag: function() {
-		if (currentTime-Date.now()>throttleTime) {
+		if (Date.now()-currentTime>throttleTime) {
 			socket.send(JSON.stringify({'id':this.id,'left':$(this).css('left'),'top':$(this).css('top')}));
 			currentTime=Date.now();
 		}
