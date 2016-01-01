@@ -22,7 +22,8 @@ img.onload=function() {
     rowsHeight = Math.round(img.height/rows);
     colsWidth = Math.round(img.width/cols);
     $('.piece').css('width',colsWidth);
-	var socket=new WebSocket('ws://puzzle-axelofan.rhcloud.com:8080');
+	var host = location.origin.replace(/^http/, 'ws')
+    var socket = new WebSocket(host);
 	socket.onmessage=function(event) {
 		JSON.parse(event.data).forEach(function(item) {
 			$('#'+item.id).css({'left':item.left, 'top':item.top});

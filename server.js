@@ -1,12 +1,14 @@
 var app=require('express')();
-app.set('port', (process.env.PORT || 5000));
+var http=require('http');
+var port=process.env.PORT || 5000;
 app.get('/', function(req,res){
 	res.sendfile('index.html');
 });
 app.get(/^(.+)$/, function(req, res){ 
     res.sendfile( __dirname + req.params[0]); 
  });
-app.listen(app.get('port'));
+var server = http.createServer(app)
+server.listen(port)
 
 var piece=[];
 for (i=1;i<=8;i++){
@@ -14,7 +16,7 @@ for (i=1;i<=8;i++){
 		piece.push({'id':'piece'+i+'_'+j,'left':Math.floor(Math.random()*400),'top':Math.floor(Math.random()*400)});
 	}
 }
-var wss=require('ws').Server({port:8080});
+var wss=require('ws').Server({server: server});
 wss.on('connection',function(ws) {
 	ws.send(JSON.stringify(piece));
 	ws.on('message', function(data) {
