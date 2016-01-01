@@ -1,11 +1,10 @@
 require('fs').readFile('./index.html',function(data,err){
-	if(err) throw err;
 	require('http').createServer(function(req,res){
 		res.writeHead(200,{'Content-Type':'text/html'});
 		res.write(data);
 		res.end();
 	}).listen(8080);
-}
+});
 
 var piece=[];
 for (i=1;i<=8;i++){
