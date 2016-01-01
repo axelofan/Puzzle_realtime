@@ -2,7 +2,7 @@ var app=require('express')();
 app.get('/', function(req,res){
 	res.sendfile('index.html');
 });
-app.listen(8000);
+app.listen(80);
 
 var piece=[];
 for (i=1;i<=8;i++){
