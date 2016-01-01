@@ -1,4 +1,5 @@
-﻿img = document.getElementById('img');
+﻿var throttleTime=40, currentTime=Date.now();
+img = document.getElementById('img');
 img.onload=function() { 
     zIndex=3;
     rows=8, cols=8;
@@ -31,7 +32,10 @@ img.onload=function() {
 		});
 	}
     $('.piece').draggable({drag: function() {
-		socket.send(JSON.stringify({'id':this.id,'left':$(this).css('left'),'top':$(this).css('top')}));
+		if (currentTime-Date.now()>throttleTime) {
+			socket.send(JSON.stringify({'id':this.id,'left':$(this).css('left'),'top':$(this).css('top')}));
+			currentTime=Date.now();
+		}
 	}});
     $('.piece').mousedown(function(){
         if (!$(this).hasClass('piece')) return;
