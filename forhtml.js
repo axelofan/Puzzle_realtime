@@ -1,7 +1,6 @@
 ﻿var throttleTime=30, currentTime=Date.now();
 img = document.getElementById('img');
 function checkPiece(id){
-	console.log(id);
 	if (!$('#'+id).hasClass('piece')) return;
     if ((Math.abs($('#'+id).data('x')*colsWidth-$('#'+id).offset().left-$('#game').scrollLeft())<=3) && (Math.abs($('#'+id).data('y')*rowsHeight-$('#'+id).offset().top-$('#game').scrollTop())<=3)){
 		$('#'+id).draggable('disable').css({'top':$('#'+id).data('y')*rowsHeight, 'left':$('#'+id).data('x')*colsWidth,'z-index':1}).removeClass('piece').addClass('solved');
@@ -49,5 +48,5 @@ img.onload=function() {
 		$(this).css('z-index',zIndex); 
         zIndex++;
     });
-    $('.piece').mouseup(checkPiece(this.id));
+    $('.piece').mouseup(checkPiece($(this).attr('id')));
 }
