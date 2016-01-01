@@ -34,7 +34,7 @@ img.onload=function() {
 	socket.onmessage=function(event) {
 		JSON.parse(event.data).forEach(function(item) {
 			$('#'+item.id).css({'left':item.left, 'top':item.top});
-			checkPiece('#'+item.id);
+			checkPiece(item.id);
 		});
 	}
     $('.piece').draggable({drag: function() {
@@ -48,5 +48,5 @@ img.onload=function() {
 		$(this).css('z-index',zIndex); 
         zIndex++;
     });
-    $('.piece').mouseup(checkPiece($(this).attr('id')));
+    $('.piece').mouseup(checkPiece(this).id));
 }
