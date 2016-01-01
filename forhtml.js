@@ -1,5 +1,11 @@
-﻿var throttleTime=40, currentTime=Date.now();
+﻿var throttleTime=30, currentTime=Date.now();
 img = document.getElementById('img');
+function checkPiece(id){
+	if (!$('#'+id).hasClass('piece')) return;
+    if ((Math.abs($('#'+id).data('x')*colsWidth-$('#'+id).offset().left-$('#game').scrollLeft())<=3) && (Math.abs($('#'+id).data('y')*rowsHeight-$('#'+id).offset().top-$('#game').scrollTop())<=3)){
+		$('#'+id).draggable('disable').css({'top':$('#'+id).data('y')*rowsHeight, 'left':$('#'+id).data('x')*colsWidth,'z-index':1}).removeClass('piece').addClass('solved');
+	}
+}
 img.onload=function() { 
     zIndex=3;
     rows=8, cols=8;
@@ -28,7 +34,7 @@ img.onload=function() {
 	socket.onmessage=function(event) {
 		JSON.parse(event.data).forEach(function(item) {
 			$('#'+item.id).css({'left':item.left, 'top':item.top});
-			//$('#'+item.id).mouseup();
+			checkPiece('#'+item.id);
 		});
 	}
     $('.piece').draggable({drag: function() {
@@ -42,10 +48,5 @@ img.onload=function() {
 		$(this).css('z-index',zIndex); 
         zIndex++;
     });
-    $('.piece').mouseup(function(){
-        if (!$(this).hasClass('piece')) return;
-        if ((Math.abs($(this).data('x')*colsWidth-$(this).offset().left-$('#game').scrollLeft())<=3) && (Math.abs($(this).data('y')*rowsHeight-$(this).offset().top-$('#game').scrollTop())<=3)){
-			$(this).draggable('disable').css({'top':$(this).data('y')*rowsHeight, 'left':$(this).data('x')*colsWidth,'z-index':1}).removeClass('piece').addClass('solved');
-        }
-    });
+    $('.piece').mouseup(checkPiece(this.id));
 }
