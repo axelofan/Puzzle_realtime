@@ -14,7 +14,7 @@ for (i=1;i<=8;i++){
 		piece.push({'id':'piece'+i+'_'+j,'left':Math.floor(Math.random()*400),'top':Math.floor(Math.random()*400)});
 	}
 }
-var wss=require('ws').Server({port:9000});
+var wss=require('ws').Server({port:8080});
 wss.on('connection',function(ws) {
 	ws.send(JSON.stringify(piece));
 	ws.on('message', function(data) {
