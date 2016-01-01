@@ -1,0 +1,16 @@
+{
+  "name": "puzzle",
+  "version": "1.0.0",
+  "description": "Puzzle game",
+  "main": "forhtml.js",
+  "dependencies": {
+    "ws": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
