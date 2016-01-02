@@ -49,21 +49,22 @@ wss.on('connection',function(ws) {
 					pieces[i].angle=a.angle;
 				}
 			}
-			wss.clients.forEach(function(item) {if (item!=ws) item.send(data);});
+			for (var id in wss.clients) {if (wss.clients[id]!=ws) wss.client[id].send(data);}
 		}
 		//Check endgame and restart game
 		if (JSON.parse(data).endgame){
 			complete++;
 			if (complete==wss.clients.length) {
 				initGame();
-				wss.clients.forEach(function(item) {item.send(JSON.stringify({'newgame':true}));});
+				for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'newgame':true}));}
 			}
 		}
 		//PlayerStats
 		if (JSON.parse(data).nickname) {
 			if (typeof(players[JSON.parse(data).nickname])!='undefined') players[JSON.parse(data).nickname]+=1;
 			else players[JSON.parse(data).nickname]=0;
-			wss.clients.forEach(function(item) {item.send(JSON.stringify({'players':players}));});
+			wss.clients.forEach(function(item) {});
+			for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'players':players}));}
 		}
 	});
 });
