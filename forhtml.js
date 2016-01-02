@@ -14,7 +14,11 @@ socket.onmessage=function(event) {
 	//Parse on move other player
 	if(JSON.parse(event.data).id){
 		var item = JSON.parse(event.data);
-		$('#'+item.id).css({'left':item.left, 'top':item.top});
+		$('#'+item.id).css({'left':item.left, 
+							'top':item.top,
+							'transform':'rotate('+(item.angle*90)+'deg)'
+						});
+		$('#'+item.id).data('angle',item.angle);
 		checkPiece(item.id);
 	};
 	//Parse new game
@@ -56,21 +60,47 @@ function startGame(pieces){
 	$('.piece').css('width',colsWidth);
 	//Accept coordinate from server
 	for(var i=0; i<pieces.length; i++){
-		$('#'+pieces[i].id).css({'top':pieces[i].top,'left':pieces[i].left});
+		$('#'+pieces[i].id).css({'top':pieces[i].top,
+								'left':pieces[i].left,
+								'transform':'rotate('+(pieces[i].angle*90)+'deg)'
+							})
+							.data('angle',pieces[i].angle);
 		checkPiece(pieces[i].id);
 	}
 	
     $('.piece').draggable({
 		drag: function() {
 			if (Date.now()-currentTime>throttleTime) {
-				socket.send(JSON.stringify({'id':this.id,'left':$(this).css('left'),'top':$(this).css('top')}));
+				socket.send(JSON.stringify({'id':this.id,
+											'left':$(this).css('left'),
+											'top':$(this).css('top'),
+											'angle':$(this).data('angle')
+										})
+				);
 				currentTime=Date.now();
 			}
 		},
 		stop:function() {
-			socket.send(JSON.stringify({'id':this.id,'left':$(this).css('left'),'top':$(this).css('top')}));
+			socket.send(JSON.stringify({'id':this.id,
+										'left':$(this).css('left'),
+										'top':$(this).css('top'),
+										'angle':$(this).data('angle')
+									})
+			);
 		}
 	});
+	
+	$('.piece').click(function(){
+		if (!$(this).hasClass('piece')) return;
+		$(this).data('angle',($(this).data('angle')+1)%4);
+		$(this).css('transform','rotate('+($(this).data('angle')*90)+'deg)');
+		socket.send(JSON.stringify({'id':this.id,
+										'left':$(this).css('left'),
+										'top':$(this).css('top'),
+										'angle':$(this).data('angle')
+									})
+		);
+    })
 	
     $('.piece').mousedown(function(){
         if (!$(this).hasClass('piece')) return;
@@ -84,11 +114,16 @@ function startGame(pieces){
 function checkPiece(id){
 	if (!$('#'+id).hasClass('piece')) return;
     if ((Math.abs($('#'+id).data('x')*colsWidth-$('#'+id).offset().left-$('#game').scrollLeft())<=3) 
-	&& (Math.abs($('#'+id).data('y')*rowsHeight-$('#'+id).offset().top-$('#game').scrollTop())<=3)){
+	&& (Math.abs($('#'+id).data('y')*rowsHeight-$('#'+id).offset().top-$('#game').scrollTop())<=3)
+	&& ($('#'+id).data('angle')==0)){
 		$('#'+id).draggable('disable')
-		.css({'top':$('#'+id).data('y')*rowsHeight, 'left':$('#'+id).data('x')*colsWidth,'z-index':1})
+		.css({'top':$('#'+id).data('y')*rowsHeight, 
+			'left':$('#'+id).data('x')*colsWidth,
+			'transform':'rotate(0deg)',
+			'z-index':1
+		})
 		.removeClass('piece')
 		.addClass('solved');
-		socket.send(JSON.stringify({'solve':true}));
+		if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 	}
 }
