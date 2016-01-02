@@ -1,8 +1,8 @@
 {
   "name": "puzzle",
-  "version": "1.0.0",
+  "version": "0.3.0",
   "description": "Puzzle game",
-  "main": "forhtml.js",
+  "main": "server.js",
   "dependencies": {
     "ws": "^1.0.0"
   },
@@ -11,6 +11,19 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Cabanov Alexey",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/axelofan/Puzzle_realtime.git"
+  },
+  "keywords": [
+    "puzzle",
+    "quiz",
+    "ws"
+  ],
+  "bugs": {
+    "url": "https://github.com/axelofan/Puzzle_realtime/issues"
+  },
+  "homepage": "https://github.com/axelofan/Puzzle_realtime#readme"
 }
