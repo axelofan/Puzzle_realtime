@@ -49,7 +49,7 @@ wss.on('connection',function(ws) {
 					pieces[i].angle=a.angle;
 				}
 			}
-			for (var id in wss.clients) {if (wss.clients[id]!=ws) wss.client[id].send(data);}
+			for (var id in wss.clients) {if (wss.clients[id]!=ws) wss.clients[id].send(data);}
 		}
 		//Check endgame and restart game
 		if (JSON.parse(data).endgame){
@@ -63,7 +63,6 @@ wss.on('connection',function(ws) {
 		if (JSON.parse(data).nickname) {
 			if (typeof(players[JSON.parse(data).nickname])!='undefined') players[JSON.parse(data).nickname]+=1;
 			else players[JSON.parse(data).nickname]=0;
-			wss.clients.forEach(function(item) {});
 			for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'players':players}));}
 		}
 	});
