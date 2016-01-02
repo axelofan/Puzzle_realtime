@@ -39,7 +39,6 @@ var throttleTime=50, currentTime=Date.now();
 var rows, cols;
 var rowsHeight, colsWidth;
 var nickname;
-var mouseclick=false;
 
 //Start game
 function startGame(pieces){
@@ -73,7 +72,7 @@ function startGame(pieces){
 								'transform':'rotate('+(pieces[i].angle*90)+'deg)'
 							})
 							.data('angle',pieces[i].angle);
-		checkPiece(pieces[i].id);
+		checkPiece(pieces[i].id,false);
 	}
 	$('#game').css('visibility','visible'); 
 	
@@ -117,7 +116,7 @@ function startGame(pieces){
         zIndex++;
     });
 	
-    $('.piece').mouseup(function(){checkPiece(this.id); mouseclick=true;});
+    $('.piece').mouseup(function(){checkPiece(this.id,true);});
 }
 
 function sendNick() {
@@ -125,7 +124,7 @@ function sendNick() {
 	$('#nickInput').remove();
 	socket.send(JSON.stringify({'nickname':nickname}));
 }
-function checkPiece(id){
+function checkPiece(id,isClicked){
 	if (!$('#'+id).hasClass('piece')) return;
     if ((Math.abs($('#'+id).data('x')*colsWidth-$('#'+id).offset().left-$('#game').scrollLeft())<=3) 
 	&& (Math.abs($('#'+id).data('y')*rowsHeight-$('#'+id).offset().top-$('#game').scrollTop())<=3)
@@ -138,8 +137,7 @@ function checkPiece(id){
 				})
 				.removeClass('piece')
 				.addClass('solved');
-		if (mouseclick) socket.send(JSON.stringify({'nickname':nickname}));
+		if (isClicked) socket.send(JSON.stringify({'nickname':nickname}));
 		if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 	}
-	mouseclick=false;
 }
