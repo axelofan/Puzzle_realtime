@@ -61,8 +61,8 @@ wss.on('connection',function(ws) {
 		}
 		//PlayerStats
 		if (JSON.parse(data).nickname) {
-			if (!players[JSON.parse(data).nickname]) players[JSON.parse(data).nickname]=JSON.parse(data).score;
-			else players[JSON.parse(data).nickname]+=JSON.parse(data).score;
+			if (typeof(players[JSON.parse(data).nickname])!='undefined') players[JSON.parse(data).nickname]+=1;
+			else players[JSON.parse(data).nickname]=0;
 			wss.clients.forEach(function(item) {item.send(JSON.stringify({'players':players}));});
 		}
 	});

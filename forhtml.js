@@ -123,7 +123,7 @@ function startGame(pieces){
 function sendNick() {
 	nickname=$('#nickname').val();
 	$('#nickInput').remove();
-	socket.send(JSON.stringify({'nickname':nickname,'score':0}));
+	socket.send(JSON.stringify({'nickname':nickname}));
 }
 function checkPiece(id){
 	if (!$('#'+id).hasClass('piece')) return;
@@ -138,7 +138,7 @@ function checkPiece(id){
 				})
 				.removeClass('piece')
 				.addClass('solved');
-		if (mouseclick) socket.send(JSON.stringify({'nickname':nickname,'score':1}));
+		if (mouseclick) socket.send(JSON.stringify({'nickname':nickname}));
 		if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 	}
 	mouseclick=false;
