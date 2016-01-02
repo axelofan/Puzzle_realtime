@@ -35,7 +35,7 @@ socket.onmessage=function(event) {
 
 //Game Logic
 var img=document.getElementById('img');
-var throttleTime=50, currentTime=Date.now();
+var throttleTime=100, currentTime=Date.now();
 var rows, cols;
 var rowsHeight, colsWidth;
 var nickname;
