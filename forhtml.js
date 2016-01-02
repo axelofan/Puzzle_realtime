@@ -1,6 +1,5 @@
 ﻿//WebSocket Logic
 var host = location.origin.replace(/^http/, 'ws');
-//var host='ws://localhost';
 var socket = new WebSocket(host);
 socket.onmessage=function(event) {
 	//Parse data on the start
@@ -8,7 +7,6 @@ socket.onmessage=function(event) {
 		rows=JSON.parse(event.data).rows;
 		cols=JSON.parse(event.data).cols;
 		$('#img').attr('src', location.origin+JSON.parse(event.data).img);
-		//$('#img').attr('src', 'http://localhost'+JSON.parse(event.data).img);
 		$('#img').load(function(){startGame(JSON.parse(event.data).pieces)});
 	}
 	//Parse on move other player
@@ -25,6 +23,14 @@ socket.onmessage=function(event) {
 	if(JSON.parse(event.data).newgame){
 		location.reload();
 	}
+	//Parse Player Stats
+	if(JSON.parse(event.data).players){
+		var players=JSON.parse(event.data).players;
+		$('#players').empty();
+		for (var nick in players) {
+			$('#players').append('<p>'+nick+':'+players[nick]+'</p>');
+		}
+	}
 }
 
 //Game Logic
@@ -32,6 +38,8 @@ var img=document.getElementById('img');
 var throttleTime=50, currentTime=Date.now();
 var rows, cols;
 var rowsHeight, colsWidth;
+var nickname;
+var mouseclick=false;
 
 //Start game
 function startGame(pieces){
@@ -54,7 +62,7 @@ function startGame(pieces){
         }
     }
 	//Change puzzle size
-	img.height=600;
+	img.width=1000;
 	rowsHeight = Math.round(img.height/rows);
     colsWidth = Math.round(img.width/cols);
 	$('.piece').css('width',colsWidth);
@@ -67,6 +75,7 @@ function startGame(pieces){
 							.data('angle',pieces[i].angle);
 		checkPiece(pieces[i].id);
 	}
+	$('#game').css('visibility','visible'); 
 	
     $('.piece').draggable({
 		drag: function() {
@@ -108,22 +117,29 @@ function startGame(pieces){
         zIndex++;
     });
 	
-    $('.piece').mouseup(function(){checkPiece(this.id)});
+    $('.piece').mouseup(function(){checkPiece(this.id); mouseclick=true;});
 }
 
+function sendNick() {
+	nickname=$('#nickname').val();
+	$('#nickInput').remove();
+	socket.send(JSON.stringify({'nickname':nickname,'score':0}));
+}
 function checkPiece(id){
 	if (!$('#'+id).hasClass('piece')) return;
     if ((Math.abs($('#'+id).data('x')*colsWidth-$('#'+id).offset().left-$('#game').scrollLeft())<=3) 
 	&& (Math.abs($('#'+id).data('y')*rowsHeight-$('#'+id).offset().top-$('#game').scrollTop())<=3)
 	&& ($('#'+id).data('angle')==0)){
 		$('#'+id).draggable('disable')
-		.css({'top':$('#'+id).data('y')*rowsHeight, 
-			'left':$('#'+id).data('x')*colsWidth,
-			'transform':'rotate(0deg)',
-			'z-index':1
-		})
-		.removeClass('piece')
-		.addClass('solved');
+				.css({'top':$('#'+id).data('y')*rowsHeight, 
+					'left':$('#'+id).data('x')*colsWidth,
+					'transform':'rotate(0deg)',
+					'z-index':1
+				})
+				.removeClass('piece')
+				.addClass('solved');
+		if (mouseclick) socket.send(JSON.stringify({'nickname':nickname,'score':1}));
 		if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 	}
+	mouseclick=false;
 }
