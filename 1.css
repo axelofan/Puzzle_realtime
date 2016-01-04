@@ -1,4 +1,7 @@
 ﻿@import url(https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic-ext);
+body {
+	font-family: 'Open Sans';
+}
 #img {
   position: absolute;
   top:0; 
@@ -33,39 +36,52 @@
     left:0;
     overflow: auto;
 }
-#top{
-	width:300px;
-	height:400px;
+#chat{
+	width:280px;
+	height:380px;
 	position:absolute;
 	top:0px;
 	left:100%;
 	margin:10px 10px 0px -310px;
 	background:rgba(255,255,255,0.8);
+	padding:10px;
 }
-#top p {
-	margin:0;
-	font-family: 'Open-Sans', sans-serif;
-	font-size:24px;
-	text-align:center;
-}
-#nickInput {
-	width:100%;
-	height:30px;
-	text-align: center;
+#input {
+	width:280px;
+	height:25px;
 	position:absolute;
-	top:100%;
-	margin-top: -30px;
-	left:0;
-}
-#players {
-	width:100%;
-}
-#players p {
-	margin:0;
-	font-family: 'Open-Sans', sans-serif;
-	font-size:20px;
+	left:10px;
+	top:365px;
 	text-align:center;
 }
+#messages {
+	font-family:inherit;
+	font-size:14px;
+	width:280px;
+	height:355px;
+	position:absolute;
+	left:10px;
+	top:10px;
+}
+#chatInput {
+	font-family:inherit;
+	width:251px;
+	height:25px;
+	padding:0;
+	border:0;
+}
+#okButton {
+	font-family:inherit;
+	width:25px;
+	height:25px;
+	padding:0;
+	border:0;
+}
+.nickname {
+	font-size:15px;
+	font-weight: bold;
+}
+	
 /*Created by JFMDev
 https://github.com/jfmdev/jqJigsawPuzzle */
 .type0000 {
