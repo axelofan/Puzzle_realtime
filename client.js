@@ -37,7 +37,7 @@ socket.onmessage=function(event) {
 var img=document.getElementById('img');
 var throttleTime=50, currentTime=Date.now();
 var rows, cols;
-var realSize=130, logicalSize=100; //IMPORTANT The image size must be equal cols*100 x rows*100 px
+var realSize=130, logicalSize=100; //IMPORTANT The image size must be equal cols*logicalSize x rows*logicalSize px
 //var realSize=170, logicalSize=100; //for masks.old
 var offset = (realSize - logicalSize)/2;
 var nickname='', score=0;
@@ -141,8 +141,8 @@ function checkPiece(id,isClicked){
     if ((Math.abs($('#'+id).data('x')*logicalSize-$('#'+id).offset().left-$('#game').scrollLeft()-offset)<=3) 
 	&& (Math.abs($('#'+id).data('y')*logicalSize-$('#'+id).offset().top-$('#game').scrollTop()-offset)<=3)
 	&& ($('#'+id).data('angle')==0)){
-		$('#'+id).draggable('disable')
-				.css({'top':$('#'+id).data('y')*logicalSize-offset, 
+		if ($('#'+id).is('ui-draggable')) $('#'+id).draggable('disable');
+				$('#'+id).css({'top':$('#'+id).data('y')*logicalSize-offset, 
 					'left':$('#'+id).data('x')*logicalSize-offset,
 					'transform':'rotate(0deg)',
 					'z-index':1
