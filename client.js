@@ -141,7 +141,7 @@ function checkPiece(id,isClicked){
     if ((Math.abs($('#'+id).data('x')*logicalSize-$('#'+id).offset().left-$('#game').scrollLeft()-offset)<=3) 
 	&& (Math.abs($('#'+id).data('y')*logicalSize-$('#'+id).offset().top-$('#game').scrollTop()-offset)<=3)
 	&& ($('#'+id).data('angle')==0)){
-		if ($('#'+id).is('ui-draggable')) $('#'+id).draggable('disable');
+		if ($('#'+id).hasClass('ui-draggable')) $('#'+id).draggable('disable');
 				$('#'+id).css({'top':$('#'+id).data('y')*logicalSize-offset, 
 					'left':$('#'+id).data('x')*logicalSize-offset,
 					'transform':'rotate(0deg)',
