@@ -6,18 +6,16 @@
     <link rel="stylesheet" type="text/css" href="1.css">
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-	<link href="jquery-ui.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="jquery-ui.min.js"></script>
+	<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="jquery.ui.touch-punch.min.js"></script>
   </head>
   <body>
     <div id="background"></div>
     <div id="game">
-		<div id='top'>
-			<p>Players</p>
-			<div id='players'></div>
-			<div id='nickInput'>
-				<input type='text' id='nickname' maxlength='12'> <input type='button' value='Sign In' onclick='sendNick()'>
+		<div id='chat'>
+			<div id='messages'></div>
+			<div id='input'>
+				<input type='text' id='chatInput' maxlength='12' placeholder='Nick'><input type='button' value='OK' onclick='changeNick()' id='okButton'>
 			</div>
 		</div>
 		<div id="image">

@@ -25,13 +25,11 @@ socket.onmessage=function(event) {
 	if(JSON.parse(event.data).newgame){
 		location.reload();
 	}
-	//Parse Player Stats
-	if(JSON.parse(event.data).players){
-		var players=JSON.parse(event.data).players;
-		$('#players').empty();
-		for (var nick in players) {
-			$('#players').append('<p>'+nick+':'+players[nick]+'</p>');
-		}
+	//Parse Player Message
+	if(JSON.parse(event.data).messages){
+		var messages=JSON.parse(event.data).messages;
+		$('#messages').html('');
+		for (var i=0; i<messages.length; i++) $('#messages').append(messages[i]+'<br>');
 	}
 }
 
@@ -39,9 +37,10 @@ socket.onmessage=function(event) {
 var img=document.getElementById('img');
 var throttleTime=50, currentTime=Date.now();
 var rows, cols;
-var realSize=170, logicalSize=100; //IMPORTANT The image size must be equal cols*100 x rows*100 px
+var realSize=130, logicalSize=100; //IMPORTANT The image size must be equal cols*100 x rows*100 px
+//var realSize=170, logicalSize=100; //for masks.old
 var offset = (realSize - logicalSize)/2;
-var nickname;
+var nickname='', score=0;
 
 //Start game
 function startGame(pieces){
@@ -117,11 +116,26 @@ function startGame(pieces){
     $('.piece').mouseup(function(){checkPiece(this.id,true); $(this).removeClass('active');});
 }
 
-function sendNick() {
-	nickname=$('#nickname').val();
-	$('#nickInput').remove();
-	socket.send(JSON.stringify({'nickname':nickname}));
+function changeNick() {
+	nickname=$('#chatInput').val();
+	$('#chatInput').val('');
+	$('#chatInput').removeAttr('maxlength');
+	$('#chatInput').attr('placeholder','Message');
+	$('#okButton').attr('onclick','sendMessage()');
 }
+function sendMessage() {
+	var message='<span class=nickname>'+nickname+':</span> '+$('#chatInput').val();
+	$('#chatInput').val('');
+	socket.send(JSON.stringify({'message':message}));
+}
+
+$('#chatInput').keyup(function(event) {
+	if(event.keyCode==13) {
+		if (nickname=='') changeNick();
+		else sendMessage();
+	}
+});
+
 function checkPiece(id,isClicked){
 	if (!$('#'+id).hasClass('piece')) return;
     if ((Math.abs($('#'+id).data('x')*logicalSize-$('#'+id).offset().left-$('#game').scrollLeft()-offset)<=3) 
@@ -135,7 +149,7 @@ function checkPiece(id,isClicked){
 				})
 				.removeClass('piece')
 				.addClass('solved');
-		if (isClicked) socket.send(JSON.stringify({'nickname':nickname}));
+		if (isClicked) score++;
 		if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 	}
 }

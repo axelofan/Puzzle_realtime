@@ -3,9 +3,9 @@ var rows=6, cols=10; //image size 1000x600px
 var img;
 var pieces;
 var complete;
-var players={};
+var messages=[];
 function initGame() {
-	img = '/images/'+Math.floor(Math.random()*17+1)+'.jpg';
+	img = '/images/'+Math.floor(Math.random()*12+1)+'.jpg';
 	complete=0;
 	pieces=[];
 	for (i=1;i<=rows;i++){
@@ -36,8 +36,7 @@ server.listen(port)
 //WSServer
 var wss=require('ws').Server({server: server});
 wss.on('connection',function(ws) {
-	ws.send(JSON.stringify({'rows':rows,'cols':cols,'img':img,'pieces':pieces}));
-	ws.send(JSON.stringify({'players':players}));
+	ws.send(JSON.stringify({'rows':rows,'cols':cols,'img':img,'pieces':pieces,'messages':messages}));
 	ws.on('message', function(data) {
 		//Broadcast players move
 		if (JSON.parse(data).id){
@@ -59,11 +58,11 @@ wss.on('connection',function(ws) {
 				for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'newgame':true}));}
 			}
 		}
-		//PlayerStats
-		if (JSON.parse(data).nickname) {
-			if (typeof(players[JSON.parse(data).nickname])!='undefined') players[JSON.parse(data).nickname]+=1;
-			else players[JSON.parse(data).nickname]=0;
-			for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'players':players}));}
+		//Chat message
+		if (JSON.parse(data).message) {
+			if (messages.length==15) messages=messages.slice(1);
+			messages.push(JSON.parse(data).message);
+			for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'messages':messages}));}
 		}
 	});
 });
