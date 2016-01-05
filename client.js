@@ -42,6 +42,7 @@ var realSize=170, logicalSize=100;
 var offset = (realSize - logicalSize)/2;
 var nickname='', score=0;
 var messages=[];
+$('#background').css({'top':(-1)*offset+'px','left':(-1)*offset+'px','width':$(document).width()+offset,'height':$(document).height()+offset});
 
 //Start game
 function startGame(pieces){
@@ -77,6 +78,7 @@ function startGame(pieces){
 	$('#game').css('visibility','visible'); 
 	
     $('.piece').draggable({
+		containment: '#background',
 		drag: function() {
 			if (Date.now()-currentTime>throttleTime) {
 				socket.send(JSON.stringify({'id':this.id,
@@ -89,8 +91,6 @@ function startGame(pieces){
 			}
 		},
 		stop:function() {
-			if ($(this).offset().top<0) $(this).css('top','0px');
-			if ($(this).offset.left()<0) $(this).css('left','0px');
 			socket.send(JSON.stringify({'id':this.id,
 										'left':$(this).css('left'),
 										'top':$(this).css('top'),
