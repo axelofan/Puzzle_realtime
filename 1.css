@@ -28,7 +28,6 @@ body {
   opacity: 1!important;
 }
 #game {
-	visibility:hidden;
     position:absolute;
     width:100%;
     height:100%;
@@ -80,70 +79,4 @@ body {
 .nickname {
 	font-size:15px;
 	font-weight: bold;
-}
-	
-/*Created by JFMDev
-https://github.com/jfmdev/jqJigsawPuzzle */
-.type0000 {
-     -webkit-mask-image: url('masks/0000.png');
-}
- 
-.type0001 {
-     -webkit-mask-image: url('masks/0001.png');
-}
- 
-.type0010 {
-     -webkit-mask-image: url('masks/0010.png');
-}
- 
-.type0011 {
-     -webkit-mask-image: url('masks/0011.png');
-}
- 
-.type0100 {
-     -webkit-mask-image: url('masks/0100.png');
-}
- 
-.type0101 {
-     -webkit-mask-image: url('masks/0101.png');
-}
- 
-.type0110 {
-     -webkit-mask-image: url('masks/0110.png');
-}
- 
-.type0111 {
-     -webkit-mask-image: url('masks/0111.png');
-}
- 
-.type1000 {
-     -webkit-mask-image: url('masks/1000.png');
-}
- 
-.type1001 {
-     -webkit-mask-image: url('masks/1001.png');
-}
- 
-.type1010 {
-     -webkit-mask-image: url('masks/1010.png');
-}
- 
-.type1011 {
-     -webkit-mask-image: url('masks/1011.png');
-}
- 
-.type1100 {
-     -webkit-mask-image: url('masks/1100.png');
-}
- 
-.type1101 {
-     -webkit-mask-image: url('masks/1101.png');
-}
- 
-.type1110 {
-     -webkit-mask-image: url('masks/1110.png');
-}
- 
-.type1111 {
-     -webkit-mask-image: url('masks/1111.png');
 }
