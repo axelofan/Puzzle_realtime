@@ -26,7 +26,7 @@ socket.onmessage=function(event) {
 	//Parse Player Message
 	if(JSON.parse(event.data).message){
 		var message=JSON.parse(event.data).message;
-		if (messages.length==12) messages=messages.slice(1);
+		if (messages.length==15) messages=messages.slice(1);
 		messages.push(message);
 		$('#messages').html('');
 		for (var i=0; i<messages.length; i++) $('#messages').append(messages[i]+'<br>');
@@ -89,6 +89,8 @@ function startGame(pieces){
 			}
 		},
 		stop:function() {
+			if ($(this).offset().top<0) $(this).css('top','0px');
+			if ($(this).offset.left()<0) $(this).css('left','0px');
 			socket.send(JSON.stringify({'id':this.id,
 										'left':$(this).css('left'),
 										'top':$(this).css('top'),

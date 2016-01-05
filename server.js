@@ -11,8 +11,8 @@ function initGame() {
 	for (i=1;i<=rows;i++){
 		for (j=1;j<=cols;j++){
 			pieces.push({'id':'piece'+i+'_'+j,
-						'left':Math.abs(Math.floor(Math.random()*1000)),
-						'top':Math.abs(Math.floor(Math.random()*600)),
+						'left':Math.floor(Math.random()*1000),
+						'top':Math.floor(Math.random()*600),
 						'angle':Math.floor(3*Math.random())
 			});
 		}
@@ -43,8 +43,8 @@ wss.on('connection',function(ws) {
 			var a = JSON.parse(data);
 			for (i=0;i<pieces.length;i++){
 				if(pieces[i].id==a.id) {
-					pieces[i].top=Math.abs(a.top);
-					pieces[i].left=Math.abs(a.left);
+					pieces[i].top=a.top;
+					pieces[i].left=a.left;
 					pieces[i].angle=a.angle;
 				}
 			}
