@@ -4,6 +4,8 @@ var socket = new WebSocket(host);
 socket.onmessage=function(event) {
 	//Parse data on the start
 	if (JSON.parse(event.data).img){
+		$('#game').css('visibility','hidden');
+		$('.solved').remove();
 		rows=JSON.parse(event.data).rows;
 		cols=JSON.parse(event.data).cols;
 		$('#img').attr('src', location.origin+JSON.parse(event.data).img);
@@ -21,13 +23,11 @@ socket.onmessage=function(event) {
 			checkPiece(item.id);
 		}
 	};
-	//Parse new game
-	if(JSON.parse(event.data).newgame){
-		location.reload();
-	}
 	//Parse Player Message
-	if(JSON.parse(event.data).messages){
-		var messages=JSON.parse(event.data).messages;
+	if(JSON.parse(event.data).message){
+		var message=JSON.parse(event.data).message;
+		if (messages.length==12) messages=messages.slice(1);
+		messages.push(message);
 		$('#messages').html('');
 		for (var i=0; i<messages.length; i++) $('#messages').append(messages[i]+'<br>');
 	}
@@ -37,10 +37,11 @@ socket.onmessage=function(event) {
 var img=document.getElementById('img');
 var throttleTime=50, currentTime=Date.now();
 var rows, cols;
-var realSize=130, logicalSize=100; //IMPORTANT The image size must be equal cols*logicalSize x rows*logicalSize px
-//var realSize=170, logicalSize=100; //for masks.old
+//IMPORTANT The image size must be equal cols*logicalSize x rows*logicalSize px
+var realSize=170, logicalSize=100;
 var offset = (realSize - logicalSize)/2;
 var nickname='', score=0;
+var messages=[];
 
 //Start game
 function startGame(pieces){
@@ -51,11 +52,14 @@ function startGame(pieces){
         for(var j=1; j<=cols; j++){
 			var piece = document.createElement('canvas');
 			piece.id = 'piece'+i+'_'+j;
-			piece.className='piece ' + pieceType[i-1][j-1];
+			piece.className='piece';
 			piece.width=realSize;
 			piece.height=realSize;
 			piece.style.zIndex=2;
 			piecectx=piece.getContext('2d');
+			var mask=document.getElementById(pieceType[i-1][j-1]);
+			piecectx.drawImage(mask,0,0);
+			piecectx.globalCompositeOperation='source-in';
 			piecectx.drawImage(img, (j-1)*logicalSize-offset, (i-1)*logicalSize-offset, realSize, realSize, 0, 0, realSize, realSize);
 			document.getElementById('game').appendChild(piece);
 			$('#piece'+i+'_'+j).data({'x':j-1,'y':i-1});
@@ -106,7 +110,11 @@ function startGame(pieces){
 		);
     })
 	
-    $('.piece').mousedown(function(){
+    $('.piece').mousedown(function(e){
+		if (isPiece(this.id,e)) {
+			passEventLower(this.id, e);
+			return;
+		}
         if (!$(this).hasClass('piece')) return;
 		$(this).css('z-index',zIndex); 
         zIndex++;
@@ -199,7 +207,7 @@ function randomPieceTypes(rows, cols) {
     // Convert binary number into strings.
     for(i=0; i<rows; i++) {
 		for(j=0; j<cols; j++) {
-			var value = 'type';
+			var value = '';
 			value += ((res[i][j] & 8) != 0)? '1' : '0';
 			value += ((res[i][j] & 4) != 0)? '1' : '0';
 			value += ((res[i][j] & 2) != 0)? '1' : '0';
@@ -208,4 +216,16 @@ function randomPieceTypes(rows, cols) {
         }
 	}
 	return res;
+}
+function isPiece (id,e) {
+	var x = e.pageX-$('#'+id).offset().left;
+	var y = e.pageY-$('#'+id).offset().top;
+	return ((x>offset)&&(x<realSize-offset)&&(y>offset)&&(y<realSize-offset)) ? false : true;
+}
+function passEventLower(id, e) {
+	$('#'+id).hide();
+    var $el = $(document.elementFromPoint(e.pageX, e.pageY));
+	$('#'+id).trigger('mouseup');
+    $el.trigger(e);
+	$('#'+id).show();
 }
