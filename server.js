@@ -1,17 +1,19 @@
 //Game Logic
-var rows=6, cols=10; //image size 1000x600px
+var rows=9, cols=16; //image ratio
+var imghost='/images/';
+var imgcount=10;
 var img;
 var pieces;
 var complete;
 
 function initGame() {
-	img = '/images/'+Math.floor(Math.random()*12+1)+'.jpg';
+	img = imghost+Math.ceil(Math.random()*imgcount)+'/';
 	complete=0;
 	pieces=[];
 	for (i=1;i<=rows;i++){
 		for (j=1;j<=cols;j++){
 			pieces.push({'id':'piece'+i+'_'+j,
-						'left':Math.floor(Math.random()*1000),
+						'left':Math.floor(Math.random()*1160),
 						'top':Math.floor(Math.random()*600),
 						'angle':Math.floor(3*Math.random())
 			});
@@ -60,7 +62,7 @@ wss.on('connection',function(ws) {
 		}
 		//Chat message
 		if (JSON.parse(data).message) {
-			for (var id in wss.clients) {wss.clients[id].send(JSON.stringify({'message':JSON.parse(data).message}));}
+			for (var id in wss.clients) {wss.clients[id].send(data);}
 		}
 	});
 });

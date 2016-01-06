@@ -5,23 +5,21 @@
     <title>puzzle</title>
     <link rel="stylesheet" type="text/css" href="1.css">
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 	<script type="text/javascript" src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="jquery.ui.touch-punch.min.js"></script>
   </head>
   <body>
     <div id="background"></div>
-    <div id="game">
+	<div  id='game'>
+	<div id="gameborder"></div>
 		<div id='chat'>
 			<div id='messages'></div>
 			<div id='input'>
 				<input type='text' id='chatInput' maxlength='12' placeholder='Nick'><input type='button' value='OK' onclick='changeNick()' id='okButton'>
 			</div>
 		</div>
-		<div id="image">
-			<img id="img" src=''>
-		</div>
-    </div>
+		<img id="img" src=''>
+	</div>
 	<!-- Костыли такие костыли -->
 	<div style='display:none'>
 	<img src='/masks/0000.png' id=0000>

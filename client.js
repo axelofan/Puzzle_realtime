@@ -4,19 +4,24 @@ var socket = new WebSocket(host);
 socket.onmessage=function(event) {
 	//Parse data on the start
 	if (JSON.parse(event.data).img){
-		$('#game').css('visibility','hidden');
+		$('.piece').off();
+		$('#img').off();
 		$('.solved').remove();
 		rows=JSON.parse(event.data).rows;
 		cols=JSON.parse(event.data).cols;
-		$('#img').attr('src', location.origin+JSON.parse(event.data).img);
-		$('#img').load(function(){startGame(JSON.parse(event.data).pieces)});
+		var imgpath = JSON.parse(event.data).img;
+		if ($(document).height()<=720) imgpath+='1280.jpg';
+		else if ($(document).height()<=1080) imgpath+='1920.jpg';
+		else imgpath+='3840.jpg';
+		$('#img').attr('src', imgpath);
+		$('#img').on('load', function(){startGame(JSON.parse(event.data).pieces)});
 	}
 	//Parse on move other player
 	if(JSON.parse(event.data).id){
 		var item = JSON.parse(event.data);
 		if (!$('#'+item.id).hasClass('active')) {
-			$('#'+item.id).css({'left':item.left, 
-								'top':item.top,
+			$('#'+item.id).css({'left':k*item.left, 
+								'top':k*item.top,
 								'transform':'rotate('+(item.angle*90)+'deg)'
 							});
 			$('#'+item.id).data('angle',item.angle);
@@ -37,16 +42,20 @@ socket.onmessage=function(event) {
 var img=document.getElementById('img');
 var throttleTime=50, currentTime=Date.now();
 var rows, cols;
-//IMPORTANT The image size must be equal cols*logicalSize x rows*logicalSize px
-var realSize=170, logicalSize=100;
+var k;
+var realSize=170, logicalSize=100; //size of masks
+var serverHeight=720;
 var offset = (realSize - logicalSize)/2;
 var nickname='', score=0;
 var messages=[];
-$('#background').css({'top':(-1)*offset+'px','left':(-1)*offset+'px','width':$(document).width()+offset,'height':$(document).height()+offset});
 
 //Start game
 function startGame(pieces){
     var zIndex=3;
+	k=img.width/(cols*logicalSize);
+	realSize=k*realSize;
+	logicalSize=k*logicalSize;
+	offset=k*offset;
 	var pieceType=randomPieceTypes(rows,cols);
 	//Generate puzzle
     for(var i=1; i<=rows; i++){
@@ -59,31 +68,40 @@ function startGame(pieces){
 			piece.style.zIndex=2;
 			piecectx=piece.getContext('2d');
 			var mask=document.getElementById(pieceType[i-1][j-1]);
-			piecectx.drawImage(mask,0,0);
+			piecectx.drawImage(mask,0,0,realSize,realSize);
 			piecectx.globalCompositeOperation='source-in';
 			piecectx.drawImage(img, (j-1)*logicalSize-offset, (i-1)*logicalSize-offset, realSize, realSize, 0, 0, realSize, realSize);
 			document.getElementById('game').appendChild(piece);
 			$('#piece'+i+'_'+j).data({'x':j-1,'y':i-1});
         }
     }
+	k=$('#background').height()/img.height;
+	img.height=k*img.height;
+	realSize=k*realSize;
+	logicalSize=k*logicalSize;
+	offset=k*offset;
+	k=img.height/serverHeight;
+	$('.piece').css('width',realSize);
+	if (img.width>$('#game').width()) $('#game').css('width',img.width); //mobile fix
+	if (img.width>$('#background').width()) $('#background').css('width',img.width); //mobile fix
+	$('#gameborder').css({'top':(-1)*offset,'left':(-1)*offset,'width':1.06*$('#img').width()+2*offset,'height':$('#img').height()+2*offset});
 	//Accept coordinate from server
 	for(var i=0; i<pieces.length; i++){
-		$('#'+pieces[i].id).css({'top':pieces[i].top,
-								'left':pieces[i].left,
+		$('#'+pieces[i].id).css({'top':k*pieces[i].top,
+								'left':k*pieces[i].left,
 								'transform':'rotate('+(pieces[i].angle*90)+'deg)'
 							})
 							.data('angle',pieces[i].angle);
 		checkPiece(pieces[i].id,false);
 	}
-	$('#game').css('visibility','visible'); 
 	
     $('.piece').draggable({
-		containment: '#background',
+		containment: '#gameborder', scroll:false,
 		drag: function() {
 			if (Date.now()-currentTime>throttleTime) {
 				socket.send(JSON.stringify({'id':this.id,
-											'left':$(this).css('left'),
-											'top':$(this).css('top'),
+											'left':1/k*$(this).offset().left,
+											'top':1/k*$(this).offset().top,
 											'angle':$(this).data('angle')
 										})
 				);
@@ -92,38 +110,37 @@ function startGame(pieces){
 		},
 		stop:function() {
 			socket.send(JSON.stringify({'id':this.id,
-										'left':$(this).css('left'),
-										'top':$(this).css('top'),
+										'left':1/k*$(this).offset().left,
+										'top':1/k*$(this).offset().top,
 										'angle':$(this).data('angle')
 									})
 			);
 		}
 	});
 	
-	$('.piece').click(function(){
+	$('.piece').on({'click': function(){
 		if (!$(this).hasClass('piece')) return;
 		$(this).data('angle',($(this).data('angle')+1)%4);
 		$(this).css('transform','rotate('+($(this).data('angle')*90)+'deg)');
 		socket.send(JSON.stringify({'id':this.id,
-										'left':$(this).css('left'),
-										'top':$(this).css('top'),
+										'left':1/k*$(this).offset().left,
+										'top':1/k*$(this).offset().top,
 										'angle':$(this).data('angle')
 									})
-		);
-    })
-	
-    $('.piece').mousedown(function(e){
-		if (isPiece(this.id,e)) {
-			passEventLower(this.id, e);
-			return;
-		}
-        if (!$(this).hasClass('piece')) return;
-		$(this).css('z-index',zIndex); 
-        zIndex++;
-		$(this).addClass('active');
-    });
-	
-    $('.piece').mouseup(function(){checkPiece(this.id,true); $(this).removeClass('active');});
+					);
+		},
+		'mousedown': function(e){
+			if (!isPiece(this.id,e)) {
+				passEventLower(this.id, e);
+				return;
+			}
+			if (!$(this).hasClass('piece')) return;
+			$(this).css('z-index',zIndex); 
+			zIndex++;
+			$(this).addClass('active');
+		},
+		'mouseup': function(){checkPiece(this.id,true); $(this).removeClass('active');}
+	});
 }
 
 function changeNick() {
@@ -160,8 +177,8 @@ function checkPiece(id,isClicked){
 				.removeClass('piece')
 				.addClass('solved');
 		if (isClicked) score++;
-		if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 	}
+	if ($('.solved').length==rows*cols) socket.send(JSON.stringify({'endgame':true}));
 }
 
 //Created by JFMDev
@@ -222,7 +239,7 @@ function randomPieceTypes(rows, cols) {
 function isPiece (id,e) {
 	var x = e.pageX-$('#'+id).offset().left;
 	var y = e.pageY-$('#'+id).offset().top;
-	return ((x>offset)&&(x<realSize-offset)&&(y>offset)&&(y<realSize-offset)) ? false : true;
+	return ((x>offset)&&(x<realSize-offset)&&(y>offset)&&(y<realSize-offset)) ? true : false;
 }
 function passEventLower(id, e) {
 	$('#'+id).hide();
