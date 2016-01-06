@@ -1,7 +1,7 @@
 //Game Logic
-var rows=9, cols=16; //image ratio
+var rows=9, cols=11; //image ratio
 var imghost='/images/';
-var imgcount=10;
+var imgcount=9;
 var img;
 var pieces;
 var complete;
@@ -13,7 +13,7 @@ function initGame() {
 	for (i=1;i<=rows;i++){
 		for (j=1;j<=cols;j++){
 			pieces.push({'id':'piece'+i+'_'+j,
-						'left':Math.floor(Math.random()*1160),
+						'left':Math.floor(Math.random()*800),
 						'top':Math.floor(Math.random()*600),
 						'angle':Math.floor(3*Math.random())
 			});

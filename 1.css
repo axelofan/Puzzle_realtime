@@ -39,7 +39,6 @@ body {
 	overflow:hidden;
 }
 #chat{
-	display:none;
 	width:280px;
 	height:380px;
 	position:absolute;
