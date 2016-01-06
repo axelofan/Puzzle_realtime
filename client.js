@@ -84,7 +84,7 @@ function startGame(pieces){
 	$('.piece').css('width',realSize);
 	if (img.width>$('#game').width()) $('#game').css('width',img.width); //mobile fix
 	if (img.width>$('#background').width()) $('#background').css('width',img.width); //mobile fix
-	$('#gameborder').css({'top':(-1)*offset,'left':(-1)*offset,'width':1.06*$('#img').width()+2*offset,'height':$('#img').height()+2*offset});
+	$('#gameborder').css({'top':(-1)*offset,'left':(-1)*offset,'width':1.18*$('#img').width()+2*offset,'height':$('#img').height()+2*offset});
 	//Accept coordinate from server
 	for(var i=0; i<pieces.length; i++){
 		$('#'+pieces[i].id).css({'top':k*pieces[i].top,
