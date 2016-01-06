@@ -1,7 +1,7 @@
 //Game Logic
-var rows=9, cols=11; //image ratio
+var rows=9, cols=16; //image ratio
 var imghost='/images/';
-var imgcount=9;
+var imgcount=10;
 var img;
 var pieces;
 var complete;
