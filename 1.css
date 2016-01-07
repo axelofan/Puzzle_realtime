@@ -39,32 +39,39 @@ body {
 	overflow:hidden;
 }
 #chat{
-	display:none;
-	width:280px;
-	height:380px;
+	opacity:0.3;
+	width:305px;
+	height:400px;
 	position:absolute;
 	top:0px;
 	left:100%;
-	margin:10px 10px 0px -310px;
-	background:rgba(255,255,255,0.8);
+	margin:0px 0px 0px -330px;
+	background:rgba(0,0,0,0.8);
 	padding:10px;
+	z-index:2;
+	border-radius:5px;
+}
+#chat:hover {
+	opacity:1;
+	transition: opacity 0.5s;
 }
 #input {
 	width:280px;
 	height:25px;
 	position:absolute;
-	left:10px;
-	top:365px;
+	left:35px;
+	top:10px;
 	text-align:center;
 }
 #messages {
 	font-family:inherit;
 	font-size:14px;
-	width:280px;
-	height:355px;
+	color:white;
+	width:305px;
+	height:375px;
 	position:absolute;
 	left:10px;
-	top:10px;
+	top:35px;
 }
 #chatInput {
 	font-family:inherit;
@@ -79,6 +86,9 @@ body {
 	height:25px;
 	padding:0;
 	border:0;
+}
+#hideButton {
+	width:25px;
 }
 .nickname {
 	font-size:15px;
