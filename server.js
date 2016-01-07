@@ -55,11 +55,7 @@ wss.on('connection',function(ws) {
 				solveCount++;
 			}
 			pieces[a.id]={'top':a.top,'left':a.left,'angle':a.angle,'solved':solved};
-			for (var id in wss.clients) {
-				if ((!a.drag) || (a.drag)&&(id!=ws.id)) {
-					wss.clients[id].send(JSON.stringify({'id':a.id,'piece':pieces[a.id]}));
-				}
-			}
+			for (var id in wss.clients) wss.clients[id].send(JSON.stringify({'id':a.id,'piece':pieces[a.id]}));
 			if (solveCount==rows*cols) {
 				initGame();
 				for (var id in wss.clients) wss.clients[id].send(JSON.stringify(gameData));

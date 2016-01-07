@@ -15,7 +15,7 @@ socket.onmessage=function(event) {
 		$('#img').on('load', function(){startGame(JSON.parse(event.data).pieces)});
 	}
 	//Parse on move other player
-	if (JSON.parse(event.data).id) changePiece(JSON.parse(event.data).piece,JSON.parse(event.data).id);
+	if (JSON.parse(event.data).id) {changePiece(JSON.parse(event.data).piece,JSON.parse(event.data).id);}
 	//Parse Player Message
 	if(JSON.parse(event.data).message){
 		var message=JSON.parse(event.data).message;
@@ -196,6 +196,7 @@ function passEventLower(id, e) {
 	$('#'+id).show();
 }
 function changePiece(piece,id) {
+	if ($('#'+id).hasClass('ui-draggable-dragging')) return;
 	$('#'+id).css({'left':k*piece.left, 
 					'top':k*piece.top,
 					'transform':'rotate('+(piece.angle*90)+'deg)'
