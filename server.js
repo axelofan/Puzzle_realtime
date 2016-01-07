@@ -41,6 +41,7 @@ server.listen(port)
 //WSServer
 var wss=require('ws').Server({server: server});
 wss.on('connection',function(ws) {
+	ws.send(JSON.stringify({'clientID':wss.clients.length-1}));
 	ws.send(JSON.stringify(gameData));
 	ws.on('message', function(data) {
 		//Broadcast players move
@@ -55,7 +56,11 @@ wss.on('connection',function(ws) {
 				solveCount++;
 			}
 			pieces[a.id]={'top':a.top,'left':a.left,'angle':a.angle,'solved':solved};
-			for (var id in wss.clients) wss.clients[id].send(JSON.stringify({'id':a.id,'piece':pieces[a.id]}));
+			for (var id in wss.clients) {
+				if ((!a.drag)||(a.drag)&&(id!=a.clientID)) {
+					wss.clients[id].send(JSON.stringify({'id':a.id,'piece':pieces[a.id]}));
+				}
+			}
 			if (solveCount==rows*cols) {
 				initGame();
 				for (var id in wss.clients) wss.clients[id].send(JSON.stringify(gameData));

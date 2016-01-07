@@ -1,8 +1,10 @@
 ﻿//WebSocket Logic
+var clientID=0;
 var host = location.origin.replace(/^http/, 'ws');
 var socket = new WebSocket(host);
 socket.onmessage=function(event) {
 	//Parse data on the start
+	if (JSON.parse(event.data).clientID) clientID=JSON.parse(event.data).clientID;
 	if (JSON.parse(event.data).img){
 		$('.piece').off();
 		$('#img').off();
@@ -15,7 +17,7 @@ socket.onmessage=function(event) {
 		$('#img').on('load', function(){startGame(JSON.parse(event.data).pieces)});
 	}
 	//Parse on move other player
-	if (JSON.parse(event.data).id) {changePiece(JSON.parse(event.data).piece,JSON.parse(event.data).id);}
+	if (JSON.parse(event.data).id) changePiece(JSON.parse(event.data).piece,JSON.parse(event.data).id);
 	//Parse Player Message
 	if(JSON.parse(event.data).message){
 		var message=JSON.parse(event.data).message;
@@ -196,6 +198,7 @@ function passEventLower(id, e) {
 	$('#'+id).show();
 }
 function changePiece(piece,id) {
+	console.log('OK');
 	if ($('#'+id).hasClass('ui-draggable-dragging')) return;
 	$('#'+id).css({'left':k*piece.left, 
 					'top':k*piece.top,
@@ -208,7 +211,7 @@ function changePiece(piece,id) {
 	}
 }
 function sendData (id, left, top, angle, x, y, drag) {
-	socket.send(JSON.stringify({'id':id,'left':left,'top':top,'angle':angle,'x':x,'y':y,'drag':drag}));
+	socket.send(JSON.stringify({'clientID':clientID,'id':id,'left':left,'top':top,'angle':angle,'x':x,'y':y,'drag':drag}));
 }
 function hideChat() {
 	if ($('#chat').css('height')=='400px') {
