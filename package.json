@@ -1,6 +1,6 @@
 {
   "name": "puzzle",
-  "version": "0.3.0",
+  "version": "0.8.0",
   "description": "Puzzle game",
   "main": "server.js",
   "dependencies": {

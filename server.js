@@ -30,45 +30,38 @@ var app=require('express')();
 var http=require('http');
 var port=process.env.PORT || 80;
 app.get('/', function(req,res){
-	res.sendfile('index.html');
+	res.sendFile(__dirname+'/index.html');
 });
 app.get(/^(.+)$/, function(req, res){ 
-	res.sendfile( __dirname + req.params[0]);
+	res.sendFile( __dirname + req.params[0]);
 });
 var server = http.createServer(app)
 server.listen(port)
 
 //WSServer
-var wss=require('ws').Server({server: server});
+var wss=require('socket.io').listen(server);
 wss.on('connection',function(ws) {
-	ws.send(JSON.stringify({'clientID':wss.clients.length-1}));
-	ws.send(JSON.stringify(gameData));
-	ws.on('message', function(data) {
-		//Broadcast players move
-		if (JSON.parse(data).id){
-			var solved=false;
-			var a = JSON.parse(data);
-			//Check piece solved
-			if ((!a.drag)&&(Math.abs(a.x*logicalSize-a.left-offset)<=5)&&(Math.abs(a.y*logicalSize-a.top-offset)<=5)&&(a.angle==0)){
-				a.left=a.x*logicalSize-offset;
-				a.top=a.y*logicalSize-offset;
-				solved=true;
-				solveCount++;
-			}
-			pieces[a.id]={'top':a.top,'left':a.left,'angle':a.angle,'solved':solved};
-			for (var id in wss.clients) {
-				if ((!a.drag)||(a.drag)&&(id!=a.clientID)) {
-					wss.clients[id].send(JSON.stringify({'id':a.id,'piece':pieces[a.id]}));
-				}
-			}
-			if (solveCount==rows*cols) {
-				initGame();
-				for (var id in wss.clients) wss.clients[id].send(JSON.stringify(gameData));
-			}
+	ws.emit('gameData', gameData);
+	//broadcast player move
+	ws.on('piecePosition',function(data) {
+		var solved=false;
+		//Check piece solved
+		if ((!data.drag)&&(Math.abs(data.x*logicalSize-data.left-offset)<=5)&&(Math.abs(data.y*logicalSize-data.top-offset)<=5)&&(data.angle==0)&&(!pieces[data.id].solved)){
+			data.left=data.x*logicalSize-offset;
+			data.top=data.y*logicalSize-offset;
+			solved=true;
+			solveCount++;
 		}
-		//Chat message
-		if (JSON.parse(data).message) {
-			for (var id in wss.clients) {wss.clients[id].send(data);}
+		pieces[data.id]={'top':data.top,'left':data.left,'angle':data.angle,'solved':solved};
+		ws.broadcast.emit('piecePosition',{'id':data.id,'piece':pieces[data.id]});
+		if (!data.drag) ws.emit('piecePosition',{'id':data.id,'piece':pieces[data.id]});
+		if (solveCount==rows*cols) {
+			initGame();
+			wss.sockets.emit('gameData', gameData);
 		}
+	});
+	//Chat message
+	ws.on('chatMessage',function(data) {
+		wss.sockets.emit('chatMessage', data);
 	});
 });
