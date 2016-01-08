@@ -8,6 +8,8 @@ socket.on('gameData',function(data) {
 	$('.solved').remove();
 	rows=data.rows;
 	cols=data.cols;
+	realSize=170;
+	logicalSize=100;
 	var imgpath = data.img;
 	imgpath+= ($(document).height()<=720) ? '1280.jpg' : ($(document).height()<=1080) ? '1920.jpg' : '3840.jpg';
 	$('#img').attr('src', imgpath);
