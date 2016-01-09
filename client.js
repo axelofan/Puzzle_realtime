@@ -138,6 +138,7 @@ function passEventLower(id, e) {
 	$('#'+id).show();
 }
 function changePiece(piece,id) {
+	if ($('#'+id).hasClass('ui-draggable-dragging')) return;
 	$('#'+id).css({'left':k*piece.left, 
 					'top':k*piece.top,
 					'transform':'rotate('+(piece.angle*90)+'deg)'

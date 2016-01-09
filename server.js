@@ -5,7 +5,6 @@ var imgCount=10
 var gameData;
 var img;
 var pieces;
-var solveCount;
 var realSize=136, logicalSize=80, offset=28 //piece size for 1280x720px
 
 function initGame() {
@@ -45,16 +44,17 @@ wss.on('connection',function(ws) {
 	//broadcast player move
 	ws.on('piecePosition',function(data) {
 		var solved=false;
+		var solveCount=0;
 		//Check piece solved
 		if ((!data.drag)&&(Math.abs(data.x*logicalSize-data.left-offset)<=5)&&(Math.abs(data.y*logicalSize-data.top-offset)<=5)&&(data.angle==0)&&(!pieces[data.id].solved)){
 			data.left=data.x*logicalSize-offset;
 			data.top=data.y*logicalSize-offset;
 			solved=true;
-			solveCount++;
 		}
 		pieces[data.id]={'top':data.top,'left':data.left,'angle':data.angle,'solved':solved};
 		ws.broadcast.emit('piecePosition',{'id':data.id,'piece':pieces[data.id]});
 		if (!data.drag) ws.emit('piecePosition',{'id':data.id,'piece':pieces[data.id]});
+		for (var id in pieces) if (pieces[id].solved) solveCount++;  
 		if (solveCount==rows*cols) {
 			initGame();
 			wss.sockets.emit('gameData', gameData);
