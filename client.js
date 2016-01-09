@@ -3,17 +3,14 @@ var host = location.origin;
 var socket = io.connect(host);
 //Parse data on the start
 socket.on('gameData',function(data) {
-	$('.piece').off();
-	$('#img').off();
+	$('.piece').off().remove();
+	$('#img').off().removeAttr('height');
 	$('.solved').remove();
-	$('.piece').remove();
-	$('#img').removeAttr('height');
 	rows=data.rows;
 	cols=data.cols;
 	var imgpath = data.img;
 	imgpath+= ($(document).height()<=720) ? '1280.jpg' : ($(document).height()<=1080) ? '1920.jpg' : '3840.jpg';
-	$('#img').attr('src', imgpath);
-	$('#img').on('load', function(){startGame(data.pieces)});
+	$('#img').attr('src', imgpath).on('load', function(){startGame(data.pieces)});
 });
 //Parse move other player
 socket.on('piecePosition',function(data) {
@@ -88,6 +85,7 @@ function startGame(pieces){
 		},
 		stop:function() {
 			sendPieceData(this.id, 1/k*$(this).offset().left, 1/k*$(this).offset().top, $(this).data('angle'), $(this).data('x'), $(this).data('y'), false);
+			
 		}
 	});
 	
