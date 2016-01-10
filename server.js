@@ -1,14 +1,10 @@
 //Game Logic
 var rows=9, cols=16; //image ratio
-var imgHost='/images/';
-var imgCount=10
 var gameData;
-var img;
 var pieces;
 var realSize=136, logicalSize=80, offset=28 //piece size for 1280x720px
 
 function initGame() {
-	img = imgHost+Math.ceil(Math.random()*imgCount)+'/';
 	pieces={};
 	solveCount=0;
 	for (i=1;i<=rows;i++){
@@ -20,7 +16,7 @@ function initGame() {
 			};
 		}
 	}
-	gameData={'rows':rows,'cols':cols,'img':img,'pieces':pieces};
+	gameData={'rows':rows,'cols':cols,'pieces':pieces};
 }
 initGame();
 
@@ -62,5 +58,8 @@ wss.on('connection',function(ws) {
 	//Chat message
 	ws.on('chatMessage',function(data) {
 		wss.sockets.emit('chatMessage', data);
+	});
+	ws.on('newImage',function(data) {
+		ws.emit('gameData', gameData);
 	});
 });

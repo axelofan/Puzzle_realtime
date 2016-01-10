@@ -14,7 +14,7 @@ body {
   left:0;
   width:100%;
   height:100%;
-  background: url('background.jpeg') repeat 0 0;
+  background: url('white.jpg') repeat 0 0;
   background-size:500px;
   z-index:-4;
 }
@@ -45,7 +45,7 @@ body {
 	position:absolute;
 	top:0px;
 	left:100%;
-	margin:0px 0px 0px -330px;
+	margin:0px 0px 0px -325px;
 	background:rgba(0,0,0,0.8);
 	padding:10px;
 	z-index:2;
@@ -56,10 +56,10 @@ body {
 	transition: opacity 0.5s;
 }
 #input {
-	width:280px;
+	width:230px;
 	height:25px;
 	position:absolute;
-	left:35px;
+	left:85px;
 	top:10px;
 	text-align:center;
 }
@@ -75,7 +75,7 @@ body {
 }
 #chatInput {
 	font-family:inherit;
-	width:251px;
+	width:201px;
 	height:25px;
 	padding:0;
 	border:0;
@@ -89,6 +89,34 @@ body {
 }
 #hideButton {
 	width:25px;
+	position:absolute;
+	top:10px;
+	left:10px;
+}
+#bkgButton {
+	width:23px;
+	border: 1px solid #666;
+	border-radius:4px;
+	position:absolute;
+	top:10px;
+	left:35px;
+}
+#refreshButton {
+	position:absolute;
+	top:10px;
+	left:61px;
+	border-radius:5px;
+}
+#newMessage {
+	position:absolute;
+	top:11px;
+	left:29px;
+	width:6px;
+	height:6px;
+	border-radius:3px;
+	background:red;
+	z-index:3;
+	display:none;
 }
 .nickname {
 	font-size:15px;

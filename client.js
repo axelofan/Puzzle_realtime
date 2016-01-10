@@ -1,6 +1,7 @@
 ﻿//WebSocket Logic
 var host = location.origin;
 var socket = io.connect(host);
+var imgHost='//googledrive.com/host/0B5HvsruxWQVZN3R5X2Nkd0t1SzQ';
 //Parse data on the start
 socket.on('gameData',function(data) {
 	$('.piece').off().remove();
@@ -8,8 +9,9 @@ socket.on('gameData',function(data) {
 	$('.solved').remove();
 	rows=data.rows;
 	cols=data.cols;
-	var imgpath = data.img;
-	imgpath+= ($(document).height()<=720) ? '1280.jpg' : ($(document).height()<=1080) ? '1920.jpg' : '3840.jpg';
+	var imgpath = imgHost;
+	imgpath+= ($(document).height()<=720) ? '/1280/' : ($(document).height()<=1080) ? '/1920/' : '/3840/';
+	imgpath+=Math.ceil(100*Math.random())+'.jpg';
 	$('#img').attr('src', imgpath).on('load', function(){startGame(data.pieces)});
 });
 //Parse move other player
@@ -22,6 +24,7 @@ socket.on('chatMessage',function(data) {
 	messages.push(data.message);
 	$('#messages').html('');
 	for (var i in messages) $('#messages').append(messages[i]+'<br>');
+	if (($('#newMessage').css('display')=='none')&&($('#chat').css('height')!='400px')) $('#newMessage').css('display','block');
 });
 
 //Game Logic
@@ -34,6 +37,7 @@ var serverHeight=720; //Size of server coordinates 1280x720px
 var offset = (realSize - logicalSize)/2;
 var nickname='', score=0;
 var messages=[];
+var background='white';
 hideChat();
 
 //Start game
@@ -160,5 +164,21 @@ function hideChat() {
 		$('#chat').css('height','400px');
 		$('#messages').show();
 		$('#hideButton').css('transform','rotate(0deg)');
+		$('#newMessage').css('display','none');
 	}
-}	
+}
+function changeBackground() {
+		if (background=='white') {
+			$('#background').css('background-image','url(black.jpg)');
+			$('#bkgButton').attr('src','bkgw.jpg');
+			background='black';
+		}
+		else {
+			$('#background').css('background-image','url(white.jpg)');
+			$('#bkgButton').attr('src','bkgb.jpg');
+			background='white';
+		}
+}
+function newImage() {
+	socket.emit('newImage','');
+}
