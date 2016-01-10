@@ -50,6 +50,7 @@ body {
 	padding:10px;
 	z-index:2;
 	border-radius:5px;
+	overflow:hidden;
 }
 #chat:hover {
 	opacity:1;
@@ -67,22 +68,15 @@ body {
 	font-family:inherit;
 	font-size:14px;
 	color:white;
-	width:305px;
+	width:365px;
 	height:375px;
 	position:absolute;
 	left:10px;
-	top:35px;
+	top:45px;
 }
 #chatInput {
 	font-family:inherit;
-	width:201px;
-	height:25px;
-	padding:0;
-	border:0;
-}
-#okButton {
-	font-family:inherit;
-	width:25px;
+	width:226px;
 	height:25px;
 	padding:0;
 	border:0;

@@ -24,7 +24,7 @@ socket.on('chatMessage',function(data) {
 	messages.push(data.message);
 	$('#messages').html('');
 	for (var i in messages) $('#messages').append(messages[i]+'<br>');
-	if (($('#newMessage').css('display')=='none')&&($('#chat').css('height')!='400px')) $('#newMessage').css('display','block');
+	if ($('#chat').css('height')=='25px') $('#newMessage').css('display','block');
 });
 
 //Game Logic
@@ -32,15 +32,13 @@ var img=document.getElementById('img');
 var throttleTime=50, currentTime=Date.now();
 var rows, cols;
 var k;
-var realSize=170, logicalSize=100; //size of masks
+var realSize=170, logicalSize=100, offset = 35; //size of masks
 var serverHeight=720; //Size of server coordinates 1280x720px
-var offset = (realSize - logicalSize)/2;
-var nickname='', score=0;
+var nickname='';
 var messages=[];
-var background='white';
-hideChat();
 
 //Start game
+hideChat();
 function startGame(pieces){
     var zIndex=3;
 	k=img.width/(cols*logicalSize);
@@ -53,17 +51,15 @@ function startGame(pieces){
         for(var j=1; j<=cols; j++){
 			var piece = document.createElement('canvas');
 			piece.id = 'piece'+i+'_'+j;
-			piece.className='piece';
 			piece.width=realSize;
 			piece.height=realSize;
-			piece.style.zIndex=2;
 			piecectx=piece.getContext('2d');
 			var mask=document.getElementById(pieceType[i-1][j-1]);
 			piecectx.drawImage(mask,0,0,realSize,realSize);
 			piecectx.globalCompositeOperation='source-in';
 			piecectx.drawImage(img, (j-1)*logicalSize-offset, (i-1)*logicalSize-offset, realSize, realSize, 0, 0, realSize, realSize);
 			document.getElementById('game').appendChild(piece);
-			$('#piece'+i+'_'+j).data({'x':j-1,'y':i-1});
+			$('#piece'+i+'_'+j).addClass('piece').css('z-index',2).data({'x':j-1,'y':i-1});
         }
     }
 	k=$('#background').height()/img.height;
@@ -71,8 +67,8 @@ function startGame(pieces){
 	realSize=k*realSize;
 	logicalSize=k*logicalSize;
 	offset=k*offset;
-	k=img.height/serverHeight;
 	$('.piece').css('width',realSize);
+	k=img.height/serverHeight;
 	if (img.width>$('#game').width()) $('#game').css('width',img.width); //mobile fix
 	if (img.width>$('#background').width()) $('#background').css('width',img.width); //mobile fix
 	$('#gameborder').css({'top':(-1)*offset,'left':(-1)*offset,'width': 1.06*$('#img').width()+3*offset,'height':$('#img').height()+2*offset});
@@ -114,7 +110,6 @@ function startGame(pieces){
 function changeNick() {
 	nickname=$('#chatInput').val();
 	$('#chatInput').val('').removeAttr('maxlength').attr('placeholder','Message');
-	$('#okButton').attr('onclick','sendMessage()');
 }
 function sendMessage() {
 	var message='<span class=nickname>'+nickname+':</span> '+$('#chatInput').val();
@@ -155,30 +150,14 @@ function sendPieceData (id, left, top, angle, x, y, drag) {
 	socket.emit('piecePosition',{'id':id,'left':left,'top':top,'angle':angle,'x':x,'y':y,'drag':drag});
 }
 function hideChat() {
-	if ($('#chat').css('height')=='400px') {
-		$('#chat').css('height','25px');
-		$('#messages').hide();
-		$('#hideButton').css('transform','rotate(180deg)');
-	}
-	else {
-		$('#chat').css('height','400px');
-		$('#messages').show();
-		$('#hideButton').css('transform','rotate(0deg)');
-		$('#newMessage').css('display','none');
-	}
+	$('#chat').css('height',($('#chat').css('height')=='400px') ? '25px' : '400px');
+	$('#hideButton').css('transform',($('#chat').css('height')=='400px') ? 'rotate(0deg)' : 'rotate(180deg)');
+	if ($('#chat').css('height')=='400px') $('#newMessage').css('display','none');
 }
 function changeBackground() {
-		if (background=='white') {
-			$('#background').css('background-image','url(black.jpg)');
-			$('#bkgButton').attr('src','bkgw.jpg');
-			background='black';
-		}
-		else {
-			$('#background').css('background-image','url(white.jpg)');
-			$('#bkgButton').attr('src','bkgb.jpg');
-			background='white';
-		}
+	var image = (/white/.test($('#background').css('background'))) ? 'url(black.jpg)' : 'url(white.jpg)'
+	$('#background').css('background-image',image);
 }
 function newImage() {
-	socket.emit('newImage','');
+	socket.emit('newImage');
 }
