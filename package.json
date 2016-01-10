@@ -1,27 +1,27 @@
 {
   "name": "puzzle",
-  "version": "1.0.0",
-  "description": "Real time puzzle game",
+  "version": "0.8.0",
+  "description": "Puzzle game",
   "main": "server.js",
   "dependencies": {
-    "socket.io": "^1.4.3"
+    "ws": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
+  "author": "Cabanov Alexey",
+  "license": "ISC",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/axelofan/Puzzle_realtime.git"
   },
   "keywords": [
-    "game",
-    "Node.JS",
-    "puzzle"
+    "puzzle",
+    "quiz",
+    "ws"
   ],
-  "author": "Kabanov Alexey",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/axelofan/Puzzle_realtime/issues"
   },
