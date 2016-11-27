@@ -1,7 +1,7 @@
 ﻿//WebSocket Logic
 var host = location.origin;
 var socket = io.connect(host);
-var imgHost='//googledrive.com/host/0B5HvsruxWQVZN3R5X2Nkd0t1SzQ';
+var imgHost='/';
 //Parse data on the start
 socket.on('gameData',function(data) {
 	$('.piece').off().remove();
@@ -11,7 +11,7 @@ socket.on('gameData',function(data) {
 	cols=data.cols;
 	var imgpath = imgHost;
 	imgpath+= ($(document).height()<=720) ? '/1280/' : ($(document).height()<=1080) ? '/1920/' : '/3840/';
-	imgpath+=Math.ceil(100*Math.random())+'.jpg';
+	imgpath+=Math.ceil(20*Math.random())+'.jpg';
 	$('#img').attr('src', imgpath).on('load', function(){startGame(data.pieces)});
 });
 //Parse move other player
