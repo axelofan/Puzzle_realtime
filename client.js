@@ -1,7 +1,7 @@
 ﻿//WebSocket Logic
 var host = location.origin;
 var socket = io.connect(host);
-var imgHost='/';
+var imgHost='/Images';
 //Parse data on the start
 socket.on('gameData',function(data) {
 	$('.piece').off().remove();
