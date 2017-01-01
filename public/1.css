@@ -1,0 +1,56 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,cyrillic-ext);
+body {
+	font-family: 'Open Sans';
+  background: #eee;
+}
+#img {
+  position: absolute;
+  top:0; 
+  left:0;
+  opacity: 0.5;
+}
+#gameborder{
+	position:absolute;
+}
+.piece {
+  position: absolute;
+  opacity: 1!important;
+  cursor: pointer;
+}
+.solved {
+  position: absolute;
+  opacity: 1!important;
+}
+#game {
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+	overflow:hidden;
+}
+#options{
+	opacity:0.3;
+	width:55px;
+	height:25px;
+	position:absolute;
+	top:0;
+	left:100%;
+	margin-left: -70px;
+	margin-top: 5px;
+	background:rgba(0,0,0,0.8);
+	padding:5px;
+	z-index:2;
+}
+#options:hover {
+	opacity:1;
+	transition: opacity 0.5s;
+}
+#bkgButton {
+	width:23px;
+	border: 1px solid #666;
+	border-radius:4px;
+}
+#refreshButton {
+	border-radius:5px;
+}

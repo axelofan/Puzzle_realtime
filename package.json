@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/axelofan/Puzzle_realtime#readme",
   "dependencies": {
-    "express": "^4.13.3",
-    "socket.io": "^1.4.3"
+    "express": "^4.14.0",
+    "socket.io": "^1.7.2"
   }
 }
